@@ -1,11 +1,19 @@
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 
 import { Eye, EyeClosed } from 'phosphor-react-native'
 import { useState } from 'react'
+import { Button } from '../components/Button'
+import { Input } from '../components/Input'
 import Logo from './../assets/logo.svg'
 
 export function SignIn() {
   const [passwordVisible, setPasswordVisible] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  async function handleSignIn() {}
 
   return (
     <View className="flex-1 bg-gray-100">
@@ -25,51 +33,43 @@ export function SignIn() {
             Acesse sua conta
           </Text>
 
-          <TextInput
+          <Input
             placeholder="E-mail"
-            placeholderTextColor="#9F9BA1"
-            className="w-full rounded-md bg-gray-100 px-3 py-4 text-gray-600 focus:border focus:border-gray-500"
             keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
+            onChangeText={setEmail}
+            value={email}
           />
 
+          {/* Input de senha */}
           <View className="w-full flex-row items-center rounded-md bg-gray-100 px-3 py-4 focus:border focus:border-gray-500">
-            <TextInput
+            <Input
               placeholder="Senha"
-              placeholderTextColor="#9F9BA1"
-              className="flex-1 text-gray-600"
-              autoCorrect={false}
+              className="flex-1 px-0 py-0 focus:border-0"
               secureTextEntry={passwordVisible}
-              autoCapitalize="none"
+              onChangeText={setPassword}
+              value={password}
             />
 
             <TouchableOpacity
-              onPress={() => setPasswordVisible(!passwordVisible)}
+              onPress={() => setPasswordVisible((prevState) => !prevState)}
             >
               {passwordVisible ? <EyeClosed size={20} /> : <Eye size={20} />}
             </TouchableOpacity>
           </View>
         </View>
 
-        <TouchableOpacity
-          activeOpacity={0.6}
-          className="mt-8 w-full flex-row items-center justify-center space-x-2 rounded-md bg-blue-400 px-3 py-3"
-        >
-          <Text className="font-title text-sm text-gray-100">Entrar</Text>
-        </TouchableOpacity>
+        <Button
+          className="w-full"
+          title="Entrar"
+          onPress={handleSignIn}
+          isLoading={isLoading}
+          disabled={isLoading}
+        />
       </View>
 
-      <View className="items-center gap-4 px-12 py-14">
+      <View className="flex-1 items-center gap-4 px-12 py-14">
         <Text>Ainda não tem acesso?</Text>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          className="mt-8 w-full flex-row items-center justify-center space-x-2 rounded-md bg-gray-300 px-3 py-3"
-        >
-          <Text className="font-title text-sm text-gray-700">
-            Criar uma conta
-          </Text>
-        </TouchableOpacity>
+        <Button className="w-full" title="Criar uma conta" variant="light" />
       </View>
     </View>
   )
