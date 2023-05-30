@@ -4,7 +4,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/karla'
 import { StatusBar } from 'expo-status-bar'
-import { Text, View } from 'react-native'
+import { SignIn } from './src/screens/SignIn'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -16,10 +16,9 @@ export default function App() {
     return null
   }
   return (
-    <View className="flex-1 items-center justify-center bg-gray-900">
-      <Text className="text-gray-200">NativeWind CSS</Text>
-
+    <>
+      <SignIn />
       <StatusBar style="auto" />
-    </View>
+    </>
   )
 }
