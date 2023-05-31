@@ -38,6 +38,9 @@ export function SignUp() {
         <View className="mt-8 items-center justify-center space-y-4">
           <View className="justify-end">
             <Avatar
+              size={88}
+              borderIsBlue
+              borderWidth={3}
               alt=""
               source={
                 userAvatar
@@ -98,7 +101,7 @@ export function SignUp() {
           </View>
         </View>
 
-        <Button title="Criar" variant="dark" />
+        <Button title="Criar" variant="dark" className="mt-8" />
 
         <View className="mt-12 items-center justify-center space-y-4">
           <Text className="font-body text-sm text-gray-600">
