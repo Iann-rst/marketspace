@@ -4,7 +4,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/karla'
 import { StatusBar } from 'expo-status-bar'
-import { SignIn } from './src/screens/SignIn'
+import { SignUp } from './src/screens/SignUp'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -17,7 +17,7 @@ export default function App() {
   }
   return (
     <>
-      <SignIn />
+      <SignUp />
       <StatusBar style="auto" />
     </>
   )
