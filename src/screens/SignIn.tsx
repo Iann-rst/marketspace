@@ -11,8 +11,6 @@ export function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const [isLoading, setIsLoading] = useState(false)
-
   async function handleSignIn() {}
 
   return (
@@ -58,13 +56,7 @@ export function SignIn() {
           </View>
         </View>
 
-        <Button
-          className="w-full"
-          title="Entrar"
-          onPress={handleSignIn}
-          isLoading={isLoading}
-          disabled={isLoading}
-        />
+        <Button className="mt-8 w-full" title="Entrar" onPress={handleSignIn} />
       </View>
 
       <View className="flex-1 items-center gap-4 px-12 py-14">
