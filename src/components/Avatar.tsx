@@ -1,17 +1,30 @@
 import { Image, ImageProps } from 'react-native'
 
-type IProps = ImageProps & {}
+type IProps = ImageProps & {
+  size: number
+  borderWidth: number
+  borderIsBlue: boolean
+}
 
-export function Avatar({ alt, source, ...rest }: IProps) {
+export function Avatar({
+  size,
+  borderIsBlue,
+  borderWidth,
+  alt,
+  source,
+  ...rest
+}: IProps) {
   return (
     <Image
       style={{
-        borderWidth: 3,
-        borderColor: '#647AC7',
+        borderWidth,
+        borderColor: borderIsBlue ? '#647AC7' : '#F7F7F8',
+        width: size,
+        height: size,
       }}
       alt={alt}
       source={source}
-      className="h-[88px] w-[88px] rounded-full"
+      className="rounded-full"
       {...rest}
     />
   )
