@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   Image,
   Text,
   TouchableOpacity,
@@ -20,8 +21,18 @@ export function AdvertCard({
   showUser = true,
   ...rest
 }: AdvertCardProps) {
+  const dimension = Dimensions.get('window').width - 48
+  const width = dimension / 2 - 10
+
   return (
-    <TouchableOpacity activeOpacity={0.7} className="mb-6 w-40" {...rest}>
+    <TouchableOpacity
+      style={{
+        width,
+      }}
+      activeOpacity={0.7}
+      className="mb-6"
+      {...rest}
+    >
       <View>
         <Image
           source={{ uri: 'https://github.com/Iann-rst.png' }}
