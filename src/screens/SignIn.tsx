@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 
 import { Eye, EyeClosed } from 'phosphor-react-native'
 import { useState } from 'react'
@@ -14,8 +14,11 @@ export function SignIn() {
   async function handleSignIn() {}
 
   return (
-    <View className="flex-1 bg-gray-100">
-      <View className="w-full items-center rounded-b-3xl bg-gray-200 px-12 py-16">
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      className="flex-1 bg-gray-100"
+    >
+      <View className="w-full flex-1 items-center rounded-b-3xl bg-gray-200 px-12 py-16">
         <View className="items-center justify-center">
           <Logo />
           <Text className="mt-5 text-3xl font-bold text-gray-700">
@@ -43,15 +46,16 @@ export function SignIn() {
             <Input
               placeholder="Senha"
               className="flex-1 px-0 py-0 focus:border-0"
-              secureTextEntry={passwordVisible}
+              secureTextEntry={!passwordVisible}
               onChangeText={setPassword}
               value={password}
             />
 
             <TouchableOpacity
+              activeOpacity={1}
               onPress={() => setPasswordVisible((prevState) => !prevState)}
             >
-              {passwordVisible ? <EyeClosed size={20} /> : <Eye size={20} />}
+              {!passwordVisible ? <EyeClosed size={20} /> : <Eye size={20} />}
             </TouchableOpacity>
           </View>
         </View>
@@ -59,10 +63,10 @@ export function SignIn() {
         <Button className="mt-8 w-full" title="Entrar" onPress={handleSignIn} />
       </View>
 
-      <View className="flex-1 items-center gap-4 px-12 py-14">
+      <View className="items-center gap-4 px-12 py-14">
         <Text>Ainda não tem acesso?</Text>
         <Button className="w-full" title="Criar uma conta" variant="light" />
       </View>
-    </View>
+    </ScrollView>
   )
 }
