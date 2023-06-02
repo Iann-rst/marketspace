@@ -3,8 +3,10 @@ import {
   Karla_700Bold,
   useFonts,
 } from '@expo-google-fonts/karla'
-import { StatusBar } from 'expo-status-bar'
-import { Home } from './src/screens/Home'
+import { StatusBar } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { AdDetails } from './src/screens/AdDetails'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -16,9 +18,15 @@ export default function App() {
     return null
   }
   return (
-    <>
-      <Home />
-      <StatusBar style="auto" />
-    </>
+    <SafeAreaProvider>
+      <GestureHandlerRootView className="flex-1">
+        <AdDetails />
+        <StatusBar
+          backgroundColor="transparent"
+          barStyle="default"
+          translucent
+        />
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   )
 }
