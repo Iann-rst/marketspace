@@ -34,6 +34,7 @@ export function Icon({ icon, variant }: IconProps) {
         <WhatsappLogo
           color={variant === 'light' ? '#1A181B' : '#EDECEE'}
           size={16}
+          weight="fill"
         />
       )}
 
