@@ -6,7 +6,7 @@ import {
 import { StatusBar } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { AdDetails } from './src/screens/AdDetails'
+import { MyAds } from './src/screens/MyAds'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -20,7 +20,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView className="flex-1">
-        <AdDetails />
+        <MyAds />
         <StatusBar
           backgroundColor="transparent"
           barStyle="default"
