@@ -6,7 +6,7 @@ export function Input({ ...rest }: InputProps) {
   return (
     <TextInput
       placeholderTextColor="#9F9BA1"
-      className="w-full rounded-md bg-gray-100 px-3 py-4 text-gray-600 focus:border focus:border-gray-500"
+      className="w-full rounded-md bg-gray-100 px-3 py-4 font-body text-base leading-[130%] text-gray-600 focus:border focus:border-gray-500"
       autoCapitalize="none"
       autoCorrect={false}
       {...rest}
