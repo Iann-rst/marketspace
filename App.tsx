@@ -23,7 +23,7 @@ export default function App() {
         <MyAds />
         <StatusBar
           backgroundColor="transparent"
-          barStyle="default"
+          barStyle="dark-content"
           translucent
         />
       </GestureHandlerRootView>
