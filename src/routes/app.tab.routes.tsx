@@ -9,7 +9,7 @@ import { MyAds } from '../screens/MyAds'
 
 type AppTabRoutesTypes = {
   home: undefined
-  myads: undefined
+  myAds: undefined
   signOut: undefined
 }
 
@@ -44,7 +44,7 @@ export function AppTabRoutes() {
         }}
       />
       <Screen
-        name="myads"
+        name="myAds"
         component={MyAds}
         options={{
           tabBarIcon: ({ color }) => (
