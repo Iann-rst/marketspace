@@ -4,7 +4,7 @@ import { Button } from './Button'
 
 export function HomeHeader() {
   return (
-    <View className="mt-9 flex-row items-center justify-between">
+    <View className="flex-row items-center justify-between">
       <View className="flex-row items-center space-x-2">
         <Avatar
           size={45}
