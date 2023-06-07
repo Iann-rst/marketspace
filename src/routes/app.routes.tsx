@@ -30,7 +30,7 @@ const { Navigator, Screen } = createNativeStackNavigator<AppRoutesTypes>()
 
 export function AppRoutes() {
   return (
-    <Navigator>
+    <Navigator screenOptions={{ headerShown: false }} initialRouteName="app">
       <Screen name="app" component={AppTabRoutes} />
       <Screen name="adDetails" component={AdDetails} />
       <Screen name="createAd" component={CreateAd} />
