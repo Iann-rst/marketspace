@@ -1,21 +1,28 @@
+import { useNavigation } from '@react-navigation/native'
 import { Plus, XCircle } from 'phosphor-react-native'
 import { useState } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Header } from '../components/Header'
 import { Input } from '../components/Input'
+import { AppNavigatorRoutesProps } from '../routes/app.routes'
 
 export function CreateAd() {
   const { bottom, top } = useSafeAreaInsets()
-
   const [productImages, setProductImages] = useState([])
+
+  const { navigate } = useNavigation<AppNavigatorRoutesProps>()
+
+  function handleBackScreen() {
+    navigate('app')
+  }
 
   return (
     <View
       style={{ paddingTop: top + 20, paddingBottom: bottom }}
       className="flex-1 bg-gray-200"
     >
-      <Header title="Criar anúncio" />
+      <Header title="Criar anúncio" back={handleBackScreen} />
       <View className="mt-6 flex-1 px-6">
         <View>
           <Text className="font-title text-base leading-[130%] text-gray-600">

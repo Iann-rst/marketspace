@@ -3,18 +3,26 @@ import { Dimensions, Image, ScrollView, Text, View } from 'react-native'
 import Carousel from 'react-native-reanimated-carousel'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { Bank, Barcode, CreditCard, Money, QrCode } from 'phosphor-react-native'
 import { Button } from '../components/Button'
 import { Header } from '../components/Header'
 import { InfoProfile } from '../components/InfoProfile'
 import { Tag } from '../components/Tag'
+import { AppNavigatorRoutesProps } from '../routes/app.routes'
+
+interface AdDetailsParams {
+  id: string
+}
 
 export function AdDetails() {
   const { bottom, top } = useSafeAreaInsets()
-
-  const [active, setActive] = useState(0)
   const width = Dimensions.get('window').width
+  const [active, setActive] = useState(0)
 
+  const { navigate } = useNavigation<AppNavigatorRoutesProps>()
+
+  /* FIXME: Estado para guardas as fotos do anúncio */
   const carousel = [
     {
       id: 1,
@@ -30,14 +38,23 @@ export function AdDetails() {
     },
   ]
 
+  /** TODO: Pegar o id e buscar na api o anuncio, assim que o componente for montado */
+  const { params } = useRoute()
+  const { id } = params as AdDetailsParams
+  console.log(id)
+
+  function handleGoHomeScreen() {
+    navigate('app')
+  }
+
   return (
     <ScrollView
       className="flex-1 bg-gray-200"
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingTop: top, paddingBottom: bottom }}
+      contentContainerStyle={{ paddingTop: top + 20, paddingBottom: bottom }}
     >
       <View className="flex-1">
-        <Header />
+        <Header back={handleGoHomeScreen} />
 
         {/* Carousel das Imagens do produto */}
         <View className="mt-3  w-full">

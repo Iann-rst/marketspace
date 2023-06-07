@@ -5,13 +5,19 @@ interface HeaderProps {
   iconLeft?: boolean
   title?: string
   iconRight?: 'plus' | 'edit' | null
+  back?: () => void
 }
 
-export function Header({ iconLeft = true, title, iconRight }: HeaderProps) {
+export function Header({
+  iconLeft = true,
+  title,
+  iconRight,
+  back,
+}: HeaderProps) {
   return (
     <View className="w-full flex-row items-center justify-between px-4">
       {iconLeft ? (
-        <TouchableOpacity activeOpacity={0.6}>
+        <TouchableOpacity activeOpacity={0.6} onPress={back}>
           <ArrowLeft size={24} color="#1A181B" weight="regular" />
         </TouchableOpacity>
       ) : (

@@ -1,7 +1,11 @@
 import { ArrowRight, Tag } from 'phosphor-react-native'
 import { Text, TouchableOpacity, View } from 'react-native'
 
-export function MyAdvertsCard() {
+type MyAdsCardProps = {
+  goMyAds: () => void
+}
+
+export function MyAdvertsCard({ goMyAds }: MyAdsCardProps) {
   return (
     <View className="mb-8 mt-8 space-y-3">
       <Text className="font-body text-sm leading-[18.2px] text-gray-500">
@@ -23,6 +27,7 @@ export function MyAdvertsCard() {
         <TouchableOpacity
           activeOpacity={0.7}
           className="flex-row items-center justify-center space-x-2"
+          onPress={goMyAds}
         >
           <Text className="font-title text-xs leading-[15.6px] text-blue-700">
             Meus anúncios

@@ -2,7 +2,11 @@ import { Text, View } from 'react-native'
 import { Avatar } from './Avatar'
 import { Button } from './Button'
 
-export function HomeHeader() {
+type HomeHeaderProps = {
+  handleCreateAd: () => void
+}
+
+export function HomeHeader({ handleCreateAd }: HomeHeaderProps) {
   return (
     <View className="flex-row items-center justify-between">
       <View className="flex-row items-center space-x-2">
@@ -22,7 +26,12 @@ export function HomeHeader() {
           </Text>
         </View>
       </View>
-      <Button className="w-36" title="Criar anúncio" variant="dark" />
+      <Button
+        className="w-36"
+        title="Criar anúncio"
+        variant="dark"
+        onPress={handleCreateAd}
+      />
     </View>
   )
 }
