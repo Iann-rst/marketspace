@@ -3,11 +3,10 @@ import {
   Karla_700Bold,
   useFonts,
 } from '@expo-google-fonts/karla'
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
-import { StatusBar } from 'react-native'
+import { StatusBar, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { AppTabRoutes } from './src/routes/app.tab.routes'
-import { theme } from './src/theme'
+import { Loading } from './src/components/Loading'
+import { Routes } from './src/routes'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -16,22 +15,21 @@ export default function App() {
   })
 
   if (!fontsLoaded) {
-    return null
+    return (
+      <View className="flex-1 items-center justify-center bg-gray-200">
+        <Loading />
+      </View>
+    )
   }
 
-  const themeNavigation = DefaultTheme
-  themeNavigation.colors.background = theme.colors.gray[200]
-
   return (
-    <NavigationContainer theme={themeNavigation}>
-      <GestureHandlerRootView className="flex-1">
-        <AppTabRoutes />
-        <StatusBar
-          backgroundColor="transparent"
-          barStyle="dark-content"
-          translucent
-        />
-      </GestureHandlerRootView>
-    </NavigationContainer>
+    <GestureHandlerRootView className="flex-1">
+      <Routes />
+      <StatusBar
+        backgroundColor="transparent"
+        barStyle="dark-content"
+        translucent
+      />
+    </GestureHandlerRootView>
   )
 }
