@@ -6,6 +6,7 @@ import {
 import { StatusBar, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Loading } from './src/components/Loading'
+import { AuthContextProvider } from './src/context/auth'
 import { Routes } from './src/routes'
 
 export default function App() {
@@ -24,12 +25,14 @@ export default function App() {
 
   return (
     <GestureHandlerRootView className="flex-1">
-      <Routes />
-      <StatusBar
-        backgroundColor="transparent"
-        barStyle="dark-content"
-        translucent
-      />
+      <AuthContextProvider>
+        <Routes />
+        <StatusBar
+          backgroundColor="transparent"
+          barStyle="dark-content"
+          translucent
+        />
+      </AuthContextProvider>
     </GestureHandlerRootView>
   )
 }
