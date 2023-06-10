@@ -2,10 +2,11 @@ import { ArrowRight, Tag } from 'phosphor-react-native'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 type MyAdsCardProps = {
+  numberOfAds: number
   goMyAds: () => void
 }
 
-export function MyAdvertsCard({ goMyAds }: MyAdsCardProps) {
+export function MyAdvertsCard({ numberOfAds, goMyAds }: MyAdsCardProps) {
   return (
     <View className="mb-8 mt-8 space-y-3">
       <Text className="font-body text-sm leading-[18.2px] text-gray-500">
@@ -16,7 +17,7 @@ export function MyAdvertsCard({ goMyAds }: MyAdsCardProps) {
           <Tag size={22} color="#364D9D" />
           <View>
             <Text className="font-title text-xl leading-[130%] text-gray-700">
-              4
+              {numberOfAds}
             </Text>
             <Text className="font-body text-xs leading-[130%] text-gray-600">
               anúncios ativos
