@@ -15,6 +15,8 @@ import { Eye, EyeClosed, PencilSimpleLine } from 'phosphor-react-native'
 
 import UserAvatar from '../assets/avatar.png'
 import Logo from '../assets/logo.svg'
+import { useAuth } from '../hooks/useAuth'
+import { api } from '../services/api'
 import {
   FormDataSignUpProps,
   signUpSchemaValidation,
@@ -35,6 +37,8 @@ export function SignUp() {
   const [isLoading, setIsLoading] = useState(false)
 
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>()
+
+  const { signIn } = useAuth()
 
   const {
     control,
@@ -112,6 +116,13 @@ export function SignUp() {
       console.log(userSignUpForm)
 
       /** TODO: Conectar na api, fazer o cadastro e depois enviar email e senha para a função de signIn */
+      await api.post('/users', userSignUpForm, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+
+      await signIn(email, password)
     } catch (error) {
       console.log(error)
     } finally {
