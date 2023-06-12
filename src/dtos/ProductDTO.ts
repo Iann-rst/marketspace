@@ -13,6 +13,7 @@ export type ProductDTO = {
   name: string
   price: string
   is_new: boolean
+  is_active: boolean
   accept_trade: boolean
   product_images: ProductImagesDTO[]
   payment_methods: PaymentMethodsDTO[]
