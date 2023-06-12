@@ -11,6 +11,8 @@ import { Input } from '../components/Input'
 import { Eye, EyeClosed } from 'phosphor-react-native'
 import Logo from './../assets/logo.svg'
 
+import { AxiosError } from 'axios'
+import { useAuth } from '../hooks/useAuth'
 import {
   FormDataSignInProps,
   signInSchemaValidation,
@@ -19,6 +21,8 @@ import {
 export function SignIn() {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>()
+
+  const { isLoadingUser, signIn } = useAuth()
 
   const {
     control,
@@ -35,8 +39,13 @@ export function SignIn() {
   })
 
   async function handleSignIn({ email, password }: FormDataSignInProps) {
-    console.log('E-mail: ', email)
-    console.log('password: ', password)
+    try {
+      await signIn(email, password)
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response.data.message)
+      }
+    }
   }
 
   function goSignUpScreen() {
@@ -132,6 +141,8 @@ export function SignIn() {
           className="mt-8 w-full"
           title="Entrar"
           onPress={handleSubmit(handleSignIn)}
+          isLoading={isLoadingUser}
+          disabled={isLoadingUser}
         />
       </View>
 
