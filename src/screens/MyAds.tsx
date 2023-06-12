@@ -2,9 +2,15 @@ import { FlatList, Text, View } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { useEffect, useState } from 'react'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useCallback, useMemo, useState } from 'react'
 import { AdvertCard } from '../components/AdvertCard'
+import { EmptyList } from '../components/EmptyList'
 import { Header } from '../components/Header'
+import { Loading } from '../components/Loading'
+import { ProductDTO } from '../dtos/ProductDTO'
+import { AppNavigatorRoutesProps } from '../routes/app.routes'
+import { api } from '../services/api'
 
 interface SelectProps {
   label: string
@@ -12,25 +18,20 @@ interface SelectProps {
 }
 
 export function MyAds() {
+  const { navigate } = useNavigation<AppNavigatorRoutesProps>()
   const { bottom, top } = useSafeAreaInsets()
-  const [value, setValue] = useState<string>('todos')
-  const [myAds, setMyAds] = useState([
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-  ])
+  const [isLoading, setIsLoading] = useState(true)
+  const [value, setValue] = useState<string>('all')
+  const [myAds, setMyAds] = useState<ProductDTO[]>([])
 
-  const select: SelectProps[] = [
-    { label: 'Todos', value: 'todos' },
-    { label: 'Ativos', value: 'ativos' },
-    { label: 'Inativos', value: 'inativos' },
-  ]
+  const select: SelectProps[] = useMemo(
+    () => [
+      { label: 'Todos', value: 'all' },
+      { label: 'Ativos', value: 'active' },
+      { label: 'Inativos', value: 'inactive' },
+    ],
+    [],
+  )
 
   const renderItem = (item: SelectProps) => {
     return (
@@ -46,10 +47,45 @@ export function MyAds() {
     )
   }
 
+  const myAdsFiltered = myAds.filter((product) => {
+    if (value === 'all') {
+      return true
+    }
+
+    return value === 'active'
+      ? product.is_active === true
+      : product.is_active === false
+  })
+
+  // navegar para a tela de detalhes do meu anuncio
+  function handleMyAdDetails(id: string) {
+    navigate('myAdDetails', {
+      id,
+    })
+  }
+
   // Buscar os anúncios na api
-  useEffect(() => {
-    console.log(value)
-  }, [value])
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchMyAds() {
+        try {
+          setIsLoading(true)
+          // busca os produtos de acordo com o filtro = 'todos', 'ativos', 'inativos'
+          const response = await api.get('/users/products')
+
+          const products: ProductDTO[] = response.data
+
+          setMyAds(products)
+        } catch (error) {
+          console.log(error)
+        } finally {
+          setIsLoading(false)
+        }
+      }
+
+      fetchMyAds()
+    }, []),
+  )
 
   return (
     <View
@@ -60,7 +96,11 @@ export function MyAds() {
       <View className="mt-8 flex-1 px-6">
         <View className="mb-5 flex-row items-center justify-between">
           <Text className="font-body text-sm leading-[130%] text-gray-600">
-            9 anúncios
+            {myAdsFiltered.length === 0
+              ? 'Nenhum anúncio'
+              : myAdsFiltered.length === 1
+              ? '1 anúncio'
+              : `${myAdsFiltered.length} anúncios`}
           </Text>
           <Dropdown
             style={{
@@ -90,17 +130,30 @@ export function MyAds() {
           />
         </View>
 
-        <FlatList
-          contentContainerStyle={{
-            paddingBottom: 40,
-          }}
-          data={myAds}
-          keyExtractor={(item) => item}
-          renderItem={(item) => <AdvertCard showUser={false} />}
-          numColumns={2}
-          columnWrapperStyle={{ justifyContent: 'space-between' }}
-          showsVerticalScrollIndicator={false}
-        />
+        {isLoading ? (
+          <View className="flex-1 items-center justify-center">
+            <Loading />
+          </View>
+        ) : (
+          <FlatList
+            contentContainerStyle={{
+              paddingBottom: 40,
+              flexGrow: 1,
+            }}
+            data={myAdsFiltered}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <AdvertCard
+                showUser={false}
+                onPress={() => handleMyAdDetails(item.id)}
+              />
+            )}
+            numColumns={2}
+            columnWrapperStyle={{ justifyContent: 'space-between' }}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={<EmptyList />}
+          />
+        )}
       </View>
     </View>
   )
