@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import { createContext, ReactNode, useEffect, useState } from 'react'
 import { UserDTO } from '../dtos/UserDTO'
 import { api } from '../services/api'
@@ -48,7 +49,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       await storageUserSave(userData)
       await storageAuthTokenSave({ token, refresh_token })
     } catch (error) {
-      console.log(error)
       throw error
     } finally {
       setIsLoadingUser(false)
@@ -59,15 +59,13 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     // fazer login do usuário na api, salvar o token e dados do usuário no async-storage/secure-store
 
     try {
+      setIsLoadingUser(true)
       const { data } = await api.post('/sessions', { email, password })
       if (data.user && data.token && data.refresh_token) {
-        setIsLoadingUser(true)
         await storageUserAndTokenSave(data.user, data.token, data.refresh_token)
         userAndTokenUpdate(data.user, data.token)
-        console.log('ESTOU AQUI')
       }
     } catch (error) {
-      console.log(error)
       throw error
     } finally {
       setIsLoadingUser(false)
@@ -83,7 +81,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       await storageAuthTokenRemove()
       api.defaults.headers.common.Authorization = ''
     } catch (error) {
-      console.log(error)
       throw error
     } finally {
       setIsLoadingUser(false)
@@ -101,7 +98,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         userAndTokenUpdate(userLogged, token)
       }
     } catch (error) {
-      console.log(error)
       throw error
     } finally {
       setIsLoadingUser(false)
