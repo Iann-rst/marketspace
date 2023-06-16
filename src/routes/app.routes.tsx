@@ -4,7 +4,7 @@ import {
 } from '@react-navigation/native-stack'
 import { AdDetails } from '../screens/AdDetails'
 import { AdPreview } from '../screens/AdPreview'
-import { CreateAd } from '../screens/CreateAd'
+import { CreateAd, ProductImagesProps } from '../screens/CreateAd'
 import { EditAd } from '../screens/EditAd'
 import { MyAdDetails } from '../screens/MyAdDetails'
 import { AppTabRoutes } from './app.tab.routes'
@@ -17,7 +17,15 @@ type AppRoutesTypes = {
     id: string
   }
   createAd: undefined
-  adPreview: undefined
+  adPreview: {
+    name: string
+    description: string
+    price: string
+    images: ProductImagesProps[]
+    is_new: boolean
+    accept_trade: boolean
+    payment_methods: string[]
+  }
   myAdDetails: {
     id: string
   }
