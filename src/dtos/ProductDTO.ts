@@ -11,6 +11,7 @@ export type PaymentMethodsDTO = {
 export type ProductDTO = {
   id: string
   name: string
+  description: string
   price: string
   is_new: boolean
   is_active: boolean
