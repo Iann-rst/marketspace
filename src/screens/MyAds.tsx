@@ -144,7 +144,7 @@ export function MyAds() {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <AdvertCard
-                showUser={false}
+                product={item}
                 onPress={() => handleMyAdDetails(item.id)}
               />
             )}
