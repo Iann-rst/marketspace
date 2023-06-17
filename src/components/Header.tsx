@@ -5,7 +5,8 @@ interface HeaderProps {
   iconLeft?: boolean
   title?: string
   iconRight?: 'plus' | 'edit' | null
-  back?: () => void
+  back?: () => void // FIXME: Depois mudar o nome da função
+  rightFunction?: () => void // FIXME: Depois mudar o nome dessa função
 }
 
 export function Header({
@@ -13,6 +14,7 @@ export function Header({
   title,
   iconRight,
   back,
+  rightFunction,
 }: HeaderProps) {
   return (
     <View className="w-full flex-row items-center justify-between px-4">
@@ -31,7 +33,7 @@ export function Header({
       )}
 
       {iconRight ? (
-        <TouchableOpacity activeOpacity={0.6}>
+        <TouchableOpacity activeOpacity={0.6} onPress={rightFunction}>
           {iconRight === 'plus' ? (
             <Plus size={24} color="#1A181B" weight="regular" />
           ) : (
