@@ -38,8 +38,9 @@ export function Home() {
 
   async function fetchAdsData() {
     try {
-      const { data } = await api.get('/users/products')
-      setNumberOfMyAds(data.length)
+      const { data } = await api.get<ProductDTO[]>('/users/products')
+      const myActiveAds = data.filter((ad) => ad.is_active === true)
+      setNumberOfMyAds(myActiveAds.length)
 
       const response = await api.get('/products')
       const products: ProductDTO[] = response.data
@@ -75,7 +76,10 @@ export function Home() {
           data={items}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <AdvertCard onPress={() => handleAdDetails(item.id)} />
+            <AdvertCard
+              product={{ ...item, is_active: true }}
+              onPress={() => handleAdDetails(item.id)}
+            />
           )}
           numColumns={2}
           columnWrapperStyle={{ justifyContent: 'space-between' }}
