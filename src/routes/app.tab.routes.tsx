@@ -3,7 +3,11 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import { House, SignOut, Tag } from 'phosphor-react-native'
+import { useEffect } from 'react'
+import { View } from 'react-native'
 import { theme } from '../../tailwind.config'
+import { Loading } from '../components/Loading'
+import { useAuth } from '../hooks/useAuth'
 import { Home } from '../screens/Home'
 import { MyAds } from '../screens/MyAds'
 
@@ -18,6 +22,25 @@ export type AppTabRoutesProps = BottomTabNavigationProp<AppTabRoutesTypes>
 const { Navigator, Screen } = createBottomTabNavigator<AppTabRoutesTypes>()
 
 export function AppTabRoutes() {
+  // Tela de SignOut
+  function SignOutScreen() {
+    const { signOut } = useAuth()
+
+    useEffect(() => {
+      async function handleSignOut() {
+        await signOut()
+      }
+
+      handleSignOut()
+    }, [signOut])
+
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Loading />
+      </View>
+    )
+  }
+
   return (
     <Navigator
       screenOptions={{
@@ -53,10 +76,9 @@ export function AppTabRoutes() {
         }}
       />
 
-      {/** FIXME: Corrigir a rota de logout */}
       <Screen
         name="signOut"
-        component={MyAds}
+        component={SignOutScreen}
         options={{
           tabBarIcon: () => (
             <SignOut
