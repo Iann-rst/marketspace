@@ -59,6 +59,17 @@ export function MyAdDetails() {
     }
   }
 
+  async function handleDeleteAd() {
+    try {
+      await api.delete(`/products/${id}`)
+      navigate('app', { screen: 'myAds' })
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return alert('Não foi possível excluir o anúncio.')
+      }
+    }
+  }
+
   useEffect(() => {
     async function getAdData() {
       try {
@@ -132,7 +143,7 @@ export function MyAdDetails() {
       </View>
 
       {/* Content - Info da publicação */}
-      <View className="flex-1 p-6">
+      <View className="flex-1 px-6 pt-6">
         <InfoProfile name={user.name} userImage={user.avatar} />
         <View className="mt-6 space-y-2">
           <Tag isNew={product.is_new} />
@@ -177,18 +188,23 @@ export function MyAdDetails() {
             </View>
           </View>
         </View>
+      </View>
 
-        <View className="mt-8 space-y-2">
-          <Button
-            title={product.is_active ? 'Desativar anúncio' : 'Reativar anúncio'}
-            variant={product.is_active ? 'dark' : 'main'}
-            icon="power"
-            onPress={handleChangeVisibility}
-            isLoading={loading}
-            disabled={loading}
-          />
-          <Button title="Excluir anúncio" variant="light" icon="trash" />
-        </View>
+      <View className="mt-8 space-y-2 p-6">
+        <Button
+          title={product.is_active ? 'Desativar anúncio' : 'Reativar anúncio'}
+          variant={product.is_active ? 'dark' : 'main'}
+          icon="power"
+          onPress={handleChangeVisibility}
+          isLoading={loading}
+          disabled={loading}
+        />
+        <Button
+          title="Excluir anúncio"
+          variant="light"
+          icon="trash"
+          onPress={handleDeleteAd}
+        />
       </View>
     </ScrollView>
   )
