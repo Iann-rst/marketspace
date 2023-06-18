@@ -1,3 +1,5 @@
+import { UserDTO } from './UserDTO'
+
 export type ProductImagesDTO = {
   path: string
   id: string
@@ -18,7 +20,5 @@ export type ProductDTO = {
   accept_trade: boolean
   product_images: ProductImagesDTO[]
   payment_methods: PaymentMethodsDTO[]
-  user?: {
-    avatar: string
-  }
+  user?: UserDTO
 }
