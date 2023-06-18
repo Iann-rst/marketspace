@@ -14,6 +14,7 @@ import { Tag } from '../components/Tag'
 import { ProductDTO } from '../dtos/ProductDTO'
 import { AppNavigatorRoutesProps } from '../routes/app.routes'
 import { api } from '../services/api'
+import { mapToStringArray } from '../utils/paymentMethods/getPaymentMethod'
 
 interface AdDetailsParams {
   id: string
@@ -136,16 +137,16 @@ export function AdDetails() {
                   </Text>
                 </View>
 
-                <View className="sapce-y-2">
+                <View className="space-y-2">
                   <Text className="font-title text-sm leading-[130%] text-gray-600">
                     Meios de pagamento:
                   </Text>
 
                   <View className="space-y-1">
                     <PaymentsMethods
-                      payment_methods={product.payment_methods.map((item) => {
-                        return item.key
-                      })}
+                      payment_methods={mapToStringArray(
+                        product.payment_methods,
+                      )}
                     />
                   </View>
                 </View>

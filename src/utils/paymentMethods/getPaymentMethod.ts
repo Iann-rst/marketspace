@@ -1,3 +1,5 @@
+import { PaymentMethodsDTO } from '../../dtos/ProductDTO'
+
 type GetProps = {
   label: string
   checked: boolean
@@ -10,4 +12,10 @@ export function getPaymentMethod(data: GetProps[]) {
   const paymentMethods = response.map((payment) => payment.value)
 
   return paymentMethods
+}
+
+export function mapToStringArray(data: PaymentMethodsDTO[]) {
+  return data.map((payment) => {
+    return payment.key
+  })
 }

@@ -15,6 +15,7 @@ import { ProductDTO } from '../dtos/ProductDTO'
 import { useAuth } from '../hooks/useAuth'
 import { AppNavigatorRoutesProps } from '../routes/app.routes'
 import { api } from '../services/api'
+import { mapToStringArray } from '../utils/paymentMethods/getPaymentMethod'
 
 type MyAdDetailsParams = {
   id: string
@@ -181,9 +182,7 @@ export function MyAdDetails() {
 
             <View>
               <PaymentsMethods
-                payment_methods={product.payment_methods.map((item) => {
-                  return item.key
-                })}
+                payment_methods={mapToStringArray(product.payment_methods)}
               />
             </View>
           </View>
