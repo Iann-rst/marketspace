@@ -1,15 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dimensions, Image, ScrollView, Text, View } from 'react-native'
 import Carousel from 'react-native-reanimated-carousel'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { Bank, Barcode, CreditCard, Money, QrCode } from 'phosphor-react-native'
+import { AxiosError } from 'axios'
 import { Button } from '../components/Button'
 import { Header } from '../components/Header'
 import { InfoProfile } from '../components/InfoProfile'
+import { Loading } from '../components/Loading'
+import { PaymentsMethods } from '../components/PaymentsMethods'
 import { Tag } from '../components/Tag'
+import { ProductDTO } from '../dtos/ProductDTO'
 import { AppNavigatorRoutesProps } from '../routes/app.routes'
+import { api } from '../services/api'
 
 interface AdDetailsParams {
   id: string
@@ -18,159 +22,150 @@ interface AdDetailsParams {
 export function AdDetails() {
   const { bottom, top } = useSafeAreaInsets()
   const width = Dimensions.get('window').width
-  const [active, setActive] = useState(0)
 
   const { navigate } = useNavigation<AppNavigatorRoutesProps>()
-
-  /* FIXME: Estado para guardas as fotos do anúncio */
-  const carousel = [
-    {
-      id: 1,
-      image: 'https://github.com/Iann-rst.png',
-    },
-    {
-      id: 2,
-      image: 'https://github.com/Iann-rst.png',
-    },
-    {
-      id: 3,
-      image: 'https://github.com/Iann-rst.png',
-    },
-  ]
-
-  /** TODO: Pegar o id e buscar na api o anuncio, assim que o componente for montado */
   const { params } = useRoute()
   const { id } = params as AdDetailsParams
-  console.log(id)
+
+  const [active, setActive] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+  const [product, setProduct] = useState<ProductDTO>({} as ProductDTO)
 
   function handleGoHomeScreen() {
     navigate('app')
   }
 
+  useEffect(() => {
+    async function getAdDetails() {
+      try {
+        const response = await api.get(`/products/${id}`)
+
+        setProduct(response.data)
+        setIsLoading(false)
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          return alert(
+            'Não foi possível buscar as informações do anúncio. Tente novamente mais tarde.',
+          )
+        }
+      }
+    }
+
+    getAdDetails()
+  }, [id])
+
   return (
-    <ScrollView
-      className="flex-1 bg-gray-200"
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingTop: top + 20, paddingBottom: bottom }}
-    >
-      <View className="flex-1">
-        <Header back={handleGoHomeScreen} />
-
-        {/* Carousel das Imagens do produto */}
-        <View className="mt-3  w-full">
-          <Carousel
-            width={width}
-            height={280}
-            data={carousel}
-            onSnapToItem={(item) => setActive(item)}
-            renderItem={({ item }) => (
-              <Image
-                className="h-full w-full bg-cover"
-                source={{ uri: item.image }}
-                alt=""
-              />
-            )}
-          />
-          <View className="absolute bottom-0.5 left-0 w-full flex-row space-x-1 px-0.5">
-            {carousel.map((item, index) => (
-              <View
-                key={item.id}
-                className={`h-[3px] flex-1 rounded-full bg-gray-100 ${
-                  index === active ? 'opacity-100' : 'opacity-50'
-                }`}
-              />
-            ))}
-          </View>
+    <>
+      {isLoading ? (
+        <View className="flex-1 items-center justify-center bg-gray-200">
+          <Loading />
         </View>
+      ) : (
+        <ScrollView
+          className="flex-grow bg-gray-200"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingTop: top + 20,
+            paddingBottom: bottom,
+          }}
+        >
+          <View className="flex-1">
+            <Header back={handleGoHomeScreen} />
 
-        {/* Content - Info da publicação */}
-        <View className="flex-1 p-6">
-          <InfoProfile />
-          <View className="mt-6 space-y-2">
-            <Tag />
-
-            <View className="flex-row items-center">
-              <Text className="flex-1 text-xl font-bold leading-[130%] text-gray-700">
-                Bicicleta
-              </Text>
-              <Text className="font-title text-sm leading-[130%] text-blue-400">
-                R${` `}
-                <Text className="text-xl">120,00</Text>
-              </Text>
+            {/* Carousel das Imagens do produto */}
+            <View className="mt-3  w-full">
+              <Carousel
+                width={width}
+                height={280}
+                data={product.product_images}
+                onSnapToItem={(item) => setActive(item)}
+                renderItem={({ item }) => (
+                  <Image
+                    className="h-full w-full bg-cover"
+                    source={{
+                      uri: `${api.defaults.baseURL}/images/${item.path}`,
+                    }}
+                    alt=""
+                  />
+                )}
+              />
+              <View className="absolute bottom-0.5 left-0 w-full flex-row space-x-1 px-0.5">
+                {product.product_images.map((item, index) => (
+                  <View
+                    key={item.id}
+                    className={`h-[3px] flex-1 rounded-full bg-gray-100 ${
+                      index === active ? 'opacity-100' : 'opacity-50'
+                    }`}
+                  />
+                ))}
+              </View>
             </View>
-            <Text className="font-body text-sm leading-[130%] text-gray-600">
-              Cras congue cursus in tortor sagittis placerat nunc, tellus arcu.
-              Vitae ante leo eget maecenas urna mattis cursus. Mauris metus amet
-              nibh mauris mauris accumsan, euismod. Aenean leo nunc, purus
-              iaculis in aliquam.
-            </Text>
-          </View>
 
-          <View className="mt-6 space-y-4">
-            <View className="flex-row space-x-2">
-              <Text className="font-title text-sm leading-[130%] text-gray-600">
-                Aceita troca?
-              </Text>
-              <Text className="font-body text-sm leading-[130%] text-gray-600">
-                Sim
-              </Text>
-            </View>
+            {/* Content - Info da publicação */}
+            <View className="flex-1 p-6">
+              <InfoProfile
+                name={product.user.name}
+                userImage={product.user.avatar}
+              />
+              <View className="mt-6 space-y-2">
+                <Tag />
 
-            <View className="sapce-y-2">
-              <Text className="font-title text-sm leading-[130%] text-gray-600">
-                Meios de pagamento:
-              </Text>
+                <View className="flex-row items-center">
+                  <Text className="flex-1 text-xl font-bold leading-[130%] text-gray-700">
+                    {product.name}
+                  </Text>
+                  <Text className="font-title text-sm leading-[130%] text-blue-400">
+                    R${` `}
+                    <Text className="text-xl">
+                      {parseFloat(product.price).toFixed(2)}
+                    </Text>
+                  </Text>
+                </View>
+                <Text className="font-body text-sm leading-[130%] text-gray-600">
+                  {product.description}
+                </Text>
+              </View>
 
-              <View className="space-y-1">
-                <View className="flex-row items-center space-x-2">
-                  <Barcode size={16} />
+              <View className="mt-6 space-y-4">
+                <View className="flex-row space-x-2">
+                  <Text className="font-title text-sm leading-[130%] text-gray-600">
+                    Aceita troca?
+                  </Text>
                   <Text className="font-body text-sm leading-[130%] text-gray-600">
-                    Boleto
+                    {product.accept_trade ? 'Sim' : 'Não'}
                   </Text>
                 </View>
 
-                <View className="flex-row items-center space-x-2">
-                  <QrCode size={16} />
-                  <Text className="font-body text-sm leading-[130%] text-gray-600">
-                    Pix
+                <View className="sapce-y-2">
+                  <Text className="font-title text-sm leading-[130%] text-gray-600">
+                    Meios de pagamento:
                   </Text>
-                </View>
 
-                <View className="flex-row items-center space-x-2">
-                  <Money size={16} />
-                  <Text className="font-body text-sm leading-[130%] text-gray-600">
-                    Dinheiro
-                  </Text>
-                </View>
-
-                <View className="flex-row items-center space-x-2">
-                  <CreditCard size={16} />
-                  <Text className="font-body text-sm leading-[130%] text-gray-600">
-                    Cartão de Crédito
-                  </Text>
-                </View>
-
-                <View className="flex-row items-center space-x-2">
-                  <Bank size={16} />
-                  <Text className="font-body text-sm leading-[130%] text-gray-600">
-                    Depósito Bancário
-                  </Text>
+                  <View className="space-y-1">
+                    <PaymentsMethods
+                      payment_methods={product.payment_methods.map((item) => {
+                        return item.key
+                      })}
+                    />
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
 
-        {/* Footer */}
-        <View className="flex-row items-center justify-between bg-gray-100 p-6">
-          <Text className="font-title text-sm leading-[130%] text-blue-700">
-            R${` `}
-            <Text className="text-2xl">120,00</Text>
-          </Text>
+          {/* Footer */}
+          <View className="mt-8 flex-row items-center justify-between bg-gray-100 p-6">
+            <Text className="font-title text-sm leading-[130%] text-blue-700">
+              R${` `}
+              <Text className="text-2xl">
+                {parseFloat(product.price).toFixed(2)}
+              </Text>
+            </Text>
 
-          <Button title="Entrar em contato" icon="whatsapp" />
-        </View>
-      </View>
-    </ScrollView>
+            <Button title="Entrar em contato" icon="whatsapp" />
+          </View>
+        </ScrollView>
+      )}
+    </>
   )
 }
