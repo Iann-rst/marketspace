@@ -18,6 +18,7 @@ type AppRoutesTypes = {
   }
   createAd: undefined
   adPreview: {
+    id?: string
     name: string
     description: string
     price: string
@@ -29,7 +30,16 @@ type AppRoutesTypes = {
   myAdDetails: {
     id: string
   }
-  editAd: undefined
+  editAd: {
+    id: string
+    images: ProductImagesProps[]
+    name: string
+    description: string
+    is_new: boolean
+    price: string
+    accept_trade: boolean
+    payment_methods: string[]
+  }
 }
 
 export type AppNavigatorRoutesProps = NativeStackNavigationProp<AppRoutesTypes>
