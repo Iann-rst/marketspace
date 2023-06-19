@@ -57,20 +57,21 @@ export function MyAds() {
       : product.is_active === false
   })
 
-  // navegar para a tela de detalhes do meu anuncio
   function handleMyAdDetails(id: string) {
     navigate('myAdDetails', {
       id,
     })
   }
 
-  // Buscar os anúncios na api
+  function handleCreateAd() {
+    navigate('createAd')
+  }
+
   useFocusEffect(
     useCallback(() => {
       async function fetchMyAds() {
         try {
           setIsLoading(true)
-          // busca os produtos de acordo com o filtro = 'todos', 'ativos', 'inativos'
           const response = await api.get('/users/products')
 
           const products: ProductDTO[] = response.data
@@ -92,7 +93,12 @@ export function MyAds() {
       style={{ paddingTop: top + 20, paddingBottom: bottom }}
       className="flex-1 bg-gray-200"
     >
-      <Header iconLeft={false} title="Meus anúncios" iconRight="plus" />
+      <Header
+        iconLeft={false}
+        title="Meus anúncios"
+        iconRight="plus"
+        rightFunction={handleCreateAd}
+      />
       <View className="mt-8 flex-1 px-6">
         <View className="mb-5 flex-row items-center justify-between">
           <Text className="font-body text-sm leading-[130%] text-gray-600">
