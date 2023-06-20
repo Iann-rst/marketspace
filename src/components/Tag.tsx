@@ -4,9 +4,15 @@ import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 type TagProps = TouchableOpacityProps & {
   isNew?: boolean
   isActive?: boolean
+  removeCondition?: () => void
 }
 
-export function Tag({ isActive = false, isNew = true, ...rest }: TagProps) {
+export function Tag({
+  isActive = false,
+  isNew = true,
+  removeCondition,
+  ...rest
+}: TagProps) {
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -22,7 +28,11 @@ export function Tag({ isActive = false, isNew = true, ...rest }: TagProps) {
       >
         {isNew ? 'novo' : 'usado'}
       </Text>
-      {isActive && <XCircle size={16} weight="fill" color="#EDECEE" />}
+      {isActive && (
+        <TouchableOpacity onPress={removeCondition}>
+          <XCircle size={16} weight="fill" color="#EDECEE" />
+        </TouchableOpacity>
+      )}
     </TouchableOpacity>
   )
 }
