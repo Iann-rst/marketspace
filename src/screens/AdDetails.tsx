@@ -109,7 +109,7 @@ export function AdDetails() {
                 userImage={product.user.avatar}
               />
               <View className="mt-6 space-y-2">
-                <Tag />
+                <Tag isNew={product.is_new} />
 
                 <View className="flex-row items-center">
                   <Text className="flex-1 text-xl font-bold leading-[130%] text-gray-700">
