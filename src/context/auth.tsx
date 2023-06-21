@@ -109,6 +109,15 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     loadUserData()
   }, [])
 
+  // Assim que a aplicação carregar, passa o signOut para dentro da api.registerInterceptTokenManage
+  useEffect(() => {
+    const subscribe = api.registerInterceptTokenManager(signOut)
+
+    return () => {
+      subscribe()
+    }
+  }, [signOut])
+
   return (
     <AuthContext.Provider
       value={{
