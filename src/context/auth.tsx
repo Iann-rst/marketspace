@@ -1,5 +1,11 @@
 /* eslint-disable no-useless-catch */
-import { createContext, ReactNode, useEffect, useState } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
 import { UserDTO } from '../dtos/UserDTO'
 import { api } from '../services/api'
 import {
@@ -72,7 +78,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
-  async function signOut() {
+  const signOut = useCallback(async () => {
     // deslogar o usuário, remover token e dados do usuário do async-storage/secure-store
     try {
       setIsLoadingUser(true)
@@ -85,27 +91,27 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     } finally {
       setIsLoadingUser(false)
     }
-  }
-
-  async function loadUserData() {
-    // carregar os dados do usuário, buscar no async-storage/secure-store e pegar o token tbm
-    try {
-      setIsLoadingUser(true)
-      const userLogged = await storageUserGet()
-      const { token } = await storageAuthTokenGet()
-
-      if (userLogged && token) {
-        userAndTokenUpdate(userLogged, token)
-      }
-    } catch (error) {
-      throw error
-    } finally {
-      setIsLoadingUser(false)
-    }
-  }
+  }, [])
 
   // useEffect para buscar os dados do usuário
   useEffect(() => {
+    async function loadUserData() {
+      // carregar os dados do usuário, buscar no async-storage/secure-store e pegar o token tbm
+      try {
+        setIsLoadingUser(true)
+        const userLogged = await storageUserGet()
+        const { token } = await storageAuthTokenGet()
+
+        if (userLogged && token) {
+          userAndTokenUpdate(userLogged, token)
+        }
+      } catch (error) {
+        throw error
+      } finally {
+        setIsLoadingUser(false)
+      }
+    }
+
     loadUserData()
   }, [])
 
