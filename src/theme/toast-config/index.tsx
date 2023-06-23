@@ -10,12 +10,12 @@ export const toastConfig = {
         backgroundColor: '#FFEBEE',
       }}
       text1Style={{
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: theme.fontFamily.title,
         color: theme.colors.gray[700],
       }}
       text2Style={{
-        fontSize: 16,
+        fontSize: 12,
         fontFamily: theme.fontFamily.body,
         color: theme.colors.gray[500],
       }}
@@ -30,12 +30,12 @@ export const toastConfig = {
         backgroundColor: '#F0F8FF',
       }}
       text1Style={{
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: theme.fontFamily.title,
         color: theme.colors.gray[700],
       }}
       text2Style={{
-        fontSize: 16,
+        fontSize: 12,
         fontFamily: theme.fontFamily.body,
         color: theme.colors.gray[500],
       }}
