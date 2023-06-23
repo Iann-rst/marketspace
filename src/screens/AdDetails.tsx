@@ -102,8 +102,8 @@ export function AdDetails() {
                 {product.product_images.map((item, index) => (
                   <View
                     key={item.id}
-                    className={`h-[3px] flex-1 rounded-full bg-gray-100 ${
-                      index === active ? 'opacity-100' : 'opacity-50'
+                    className={`h-1 flex-1 rounded-full ${
+                      index === active ? 'bg-black/25' : 'bg-black-100/50'
                     }`}
                   />
                 ))}
