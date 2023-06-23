@@ -12,7 +12,7 @@ type APIInstanceProps = AxiosInstance & {
   registerInterceptTokenManager: (signOut: SignOut) => () => void
 }
 
-export const api = axios.create({
+const api = axios.create({
   baseURL: 'http://10.0.0.138:3333',
 }) as APIInstanceProps
 
@@ -27,13 +27,7 @@ api.registerInterceptTokenManager = (signOut) => {
         if (
           requestError.response.data?.message === 'token.invalid'
         ) {
-          /**
-           * Fazer a lógica de buscar por um novo token:
-           *
-           * 1º Recuperar o refresh_token do usuário
-           * 2º Adicionar a requisição na fila de requisição (para não perder a requisição que foi feita quando o token era inválido)
-           */
-
+          
           const {  refresh_token } = await storageAuthTokenGet()
 
           if (!refresh_token) {
@@ -57,7 +51,6 @@ api.registerInterceptTokenManager = (signOut) => {
             })
           }
 
-
           isRefreshing = true
 
           return new Promise(async (resolve, reject) => {
@@ -78,7 +71,6 @@ api.registerInterceptTokenManager = (signOut) => {
                 request.onSuccess(data.token);
               });
 
-              console.log('TOKEN ATUALIZADO')
               resolve(api(originalRequestConfig));
 
             } catch (error) {
@@ -94,6 +86,7 @@ api.registerInterceptTokenManager = (signOut) => {
           })
         }else{
           signOut()
+          return Promise.reject(requestError)
         }
       }
 
@@ -109,3 +102,6 @@ api.registerInterceptTokenManager = (signOut) => {
     api.interceptors.response.eject(interceptTokenManager)
   }
 }
+
+export { api }
+
