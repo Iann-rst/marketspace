@@ -33,6 +33,7 @@ import { getPaymentMethod } from '../utils/paymentMethods/getPaymentMethod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { Toast } from 'react-native-toast-message/lib/src/Toast'
+import { Loading } from '../components/Loading'
 import { SearchData, searchAdsSchema } from '../utils/schema/SearchAds'
 
 type FilterProps = {
@@ -53,6 +54,7 @@ export function Home() {
   const [condition, setCondition] = useState<'new' | 'used'>(undefined)
   const [acceptTrade, setAcceptTrade] = useState<boolean>(undefined)
   const [checkBoxes, setCheckBoxes] = useState(CheckBoxes)
+  const [isLoading, setIsLoading] = useState(true)
 
   const { control, handleSubmit } = useForm<SearchData>({
     resolver: zodResolver(searchAdsSchema),
@@ -109,6 +111,7 @@ export function Home() {
 
     try {
       setModalIsVisible(false)
+      setIsLoading(true)
       if (!search || search.trim() === '') {
         search = undefined
       }
@@ -134,12 +137,15 @@ export function Home() {
         type: 'error',
         position: 'top',
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
   // Buscar anúncios na api assim que o componente é montado
   async function fetchAdsData() {
     try {
+      setIsLoading(true)
       const { data } = await api.get<ProductDTO[]>('/users/products')
       const myActiveAds = data.filter((ad) => ad.is_active === true)
       setNumberOfMyAds(myActiveAds.length)
@@ -159,6 +165,8 @@ export function Home() {
         type: 'error',
         position: 'top',
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -198,21 +206,27 @@ export function Home() {
         <View className="mt-6 flex-1">
           {/* List */}
 
-          <FlatList
-            contentContainerStyle={{ flexGrow: 1 }}
-            data={items}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <AdvertCard
-                product={{ ...item, is_active: true }}
-                onPress={() => handleAdDetails(item.id)}
-              />
-            )}
-            numColumns={2}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={<EmptyList />}
-          />
+          {isLoading ? (
+            <View className="flex-1 items-center justify-center">
+              <Loading />
+            </View>
+          ) : (
+            <FlatList
+              contentContainerStyle={{ flexGrow: 1 }}
+              data={items}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <AdvertCard
+                  product={{ ...item, is_active: true }}
+                  onPress={() => handleAdDetails(item.id)}
+                />
+              )}
+              numColumns={2}
+              columnWrapperStyle={{ justifyContent: 'space-between' }}
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={<EmptyList />}
+            />
+          )}
         </View>
       </View>
 
