@@ -11,8 +11,9 @@ import { Input } from '../components/Input'
 import { Eye, EyeClosed } from 'phosphor-react-native'
 import Logo from './../assets/logo.svg'
 
-import { AxiosError } from 'axios'
+import { Toast } from 'react-native-toast-message/lib/src/Toast'
 import { useAuth } from '../hooks/useAuth'
+import { AppError } from '../utils/error/AppError'
 import {
   FormDataSignInProps,
   signInSchemaValidation,
@@ -42,9 +43,18 @@ export function SignIn() {
     try {
       await signIn(email, password)
     } catch (error) {
-      if (error instanceof AxiosError) {
-        alert(error.response.data.message)
-      }
+      const isAppError = error instanceof AppError
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível realizar o login. Serviço indisponível no momento.'
+
+      Toast.show({
+        text1: 'Login',
+        text2: title,
+        type: 'error',
+        position: 'top',
+      })
     }
   }
 

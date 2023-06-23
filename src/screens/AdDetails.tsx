@@ -4,7 +4,7 @@ import Carousel from 'react-native-reanimated-carousel'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { AxiosError } from 'axios'
+import { Toast } from 'react-native-toast-message/lib/src/Toast'
 import { Button } from '../components/Button'
 import { Header } from '../components/Header'
 import { InfoProfile } from '../components/InfoProfile'
@@ -14,6 +14,7 @@ import { Tag } from '../components/Tag'
 import { ProductDTO } from '../dtos/ProductDTO'
 import { AppNavigatorRoutesProps } from '../routes/app.routes'
 import { api } from '../services/api'
+import { AppError } from '../utils/error/AppError'
 import { mapToStringArray } from '../utils/paymentMethods/getPaymentMethod'
 
 interface AdDetailsParams {
@@ -44,11 +45,18 @@ export function AdDetails() {
         setProduct(response.data)
         setIsLoading(false)
       } catch (error) {
-        if (error instanceof AxiosError) {
-          return alert(
-            'Não foi possível buscar as informações do anúncio. Tente novamente mais tarde.',
-          )
-        }
+        const isAppError = error instanceof AppError
+
+        const title = isAppError
+          ? error.message
+          : 'Não foi possível buscar as informações do anúncio. Tente novamente mais tarde'
+
+        Toast.show({
+          text1: 'Detalhes do Anúncio',
+          text2: title,
+          type: 'error',
+          position: 'top',
+        })
       }
     }
 

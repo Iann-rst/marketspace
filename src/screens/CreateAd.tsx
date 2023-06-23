@@ -23,6 +23,7 @@ import { Header } from '../components/Header'
 import { Input } from '../components/Input'
 import { AppNavigatorRoutesProps } from '../routes/app.routes'
 
+import { Toast } from 'react-native-toast-message/lib/src/Toast'
 import { Button } from '../components/Button'
 import { RadioButton } from '../components/RadioButton'
 import { ValueInput } from '../components/ValueInput'
@@ -134,7 +135,12 @@ export function CreateAd() {
         setProductImages((image) => [...image, photoFile])
       }
     } catch (error) {
-      console.log(error)
+      Toast.show({
+        text1: 'Seleção de fotos do produto',
+        text2: 'Não foi possível selecionar a foto do produto.',
+        type: 'error',
+        position: 'top',
+      })
     }
   }
 
@@ -150,12 +156,22 @@ export function CreateAd() {
   /* Enviar os dados para a proxima rota */
   function handlePreviewAd(data: FormDataCreateAdProps) {
     if (productImages.length === 0) {
-      return alert('Selecione pelo menos 1 imagem para seu produto.')
+      return Toast.show({
+        text1: 'Imagens do produto',
+        text2: 'Selecione pelo menos 1 imagem para seu produto!',
+        type: 'info',
+        position: 'top',
+      })
     }
 
     const paymentMethods = getPaymentMethod(checkBoxes)
     if (paymentMethods.length === 0) {
-      return alert('Selecione pelo menos um meio de pagamento!')
+      return Toast.show({
+        text1: 'Meios de pagamento',
+        text2: 'Selecione pelo menos um meio de pagamento!',
+        type: 'info',
+        position: 'top',
+      })
     }
 
     const adPreview = {

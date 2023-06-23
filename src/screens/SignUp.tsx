@@ -13,10 +13,12 @@ import { Input } from '../components/Input'
 
 import { Eye, EyeClosed, PencilSimpleLine } from 'phosphor-react-native'
 
+import { Toast } from 'react-native-toast-message/lib/src/Toast'
 import UserAvatar from '../assets/avatar.png'
 import Logo from '../assets/logo.svg'
 import { useAuth } from '../hooks/useAuth'
 import { api } from '../services/api'
+import { AppError } from '../utils/error/AppError'
 import {
   FormDataSignUpProps,
   signUpSchemaValidation,
@@ -32,8 +34,8 @@ export function SignUp() {
   const [userAvatar, setUserAvatar] = useState<UserImageSelectedProps | null>(
     null,
   )
-  const [passwordVisible, setPasswordVisible] = useState(false)
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false)
+  const [passwordVisible, setPasswordVisible] = useState(true)
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
 
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>()
@@ -45,6 +47,7 @@ export function SignUp() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormDataSignUpProps>({
+    mode: 'onBlur',
     resolver: zodResolver(signUpSchemaValidation),
     defaultValues: {
       email: '',
@@ -98,7 +101,11 @@ export function SignUp() {
       setIsLoading(true)
 
       if (!userAvatar) {
-        return alert('Selecione uma imagem de perfil.')
+        return Toast.show({
+          text1: 'Foto do usuário.',
+          text2: 'Selecione uma foto para seu perfil.',
+          type: 'info',
+        })
       }
 
       const userImage = {
@@ -113,8 +120,6 @@ export function SignUp() {
       userSignUpForm.append('password', password)
       userSignUpForm.append('tel', tel)
 
-      console.log(userSignUpForm)
-
       /** TODO: Conectar na api, fazer o cadastro e depois enviar email e senha para a função de signIn */
       await api.post('/users', userSignUpForm, {
         headers: {
@@ -124,7 +129,18 @@ export function SignUp() {
 
       await signIn(email, password)
     } catch (error) {
-      console.log(error)
+      const isAppError = error instanceof AppError
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível realizar o cadastro.'
+
+      Toast.show({
+        text1: 'Cadastro',
+        text2: title,
+        type: 'error',
+        position: 'top',
+      })
     } finally {
       setIsLoading(false)
     }
@@ -285,7 +301,7 @@ export function SignUp() {
                     <Input
                       placeholder="Confirmar senha"
                       className="flex-1 px-0 py-0 focus:border-0"
-                      secureTextEntry={passwordVisible}
+                      secureTextEntry={confirmPasswordVisible}
                       onChangeText={onChange}
                       value={value}
                     />

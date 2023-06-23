@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useCallback, useMemo, useState } from 'react'
+import { Toast } from 'react-native-toast-message/lib/src/Toast'
 import { AdvertCard } from '../components/AdvertCard'
 import { EmptyList } from '../components/EmptyList'
 import { Header } from '../components/Header'
@@ -11,6 +12,7 @@ import { Loading } from '../components/Loading'
 import { ProductDTO } from '../dtos/ProductDTO'
 import { AppNavigatorRoutesProps } from '../routes/app.routes'
 import { api } from '../services/api'
+import { AppError } from '../utils/error/AppError'
 
 interface SelectProps {
   label: string
@@ -78,7 +80,18 @@ export function MyAds() {
 
           setMyAds(products)
         } catch (error) {
-          console.log(error)
+          const isAppError = error instanceof AppError
+
+          const title = isAppError
+            ? error.message
+            : 'Não foi possível buscar seus anúncios. Serviço indisponível no momento.'
+
+          Toast.show({
+            text1: 'Anúncios',
+            text2: title,
+            type: 'error',
+            position: 'top',
+          })
         } finally {
           setIsLoading(false)
         }

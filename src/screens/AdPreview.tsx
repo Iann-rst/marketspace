@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import Carousel from 'react-native-reanimated-carousel'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { AxiosError } from 'axios'
+import { Toast } from 'react-native-toast-message/lib/src/Toast'
 import { Button } from '../components/Button'
 import { InfoProfile } from '../components/InfoProfile'
 import { PaymentsMethods } from '../components/PaymentsMethods'
@@ -13,6 +13,7 @@ import { Tag } from '../components/Tag'
 import { useAuth } from '../hooks/useAuth'
 import { AppNavigatorRoutesProps } from '../routes/app.routes'
 import { api } from '../services/api'
+import { AppError } from '../utils/error/AppError'
 import { ProductImagesProps } from './CreateAd'
 
 type AdPreviewProps = {
@@ -68,13 +69,18 @@ export function AdPreview() {
         id: product.data.id,
       })
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error.response.data.message)
-        return alert(error.response.data.message)
-      }
-      return alert(
-        'Não foi possível publicar o anúncio. Tente novamente mais tarde.',
-      )
+      const isAppError = error instanceof AppError
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível criar o anúncio. Tente novamente mais tarde'
+
+      Toast.show({
+        text1: 'Criação do Anúncio',
+        text2: title,
+        type: 'error',
+        position: 'top',
+      })
     } finally {
       setIsLoading(false)
     }

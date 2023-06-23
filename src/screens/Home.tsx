@@ -1,5 +1,4 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import { AxiosError } from 'axios'
 import Checkbox from 'expo-checkbox'
 import { useCallback, useState } from 'react'
 import {
@@ -33,6 +32,7 @@ import { getPaymentMethod } from '../utils/paymentMethods/getPaymentMethod'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
+import { Toast } from 'react-native-toast-message/lib/src/Toast'
 import { SearchData, searchAdsSchema } from '../utils/schema/SearchAds'
 
 type FilterProps = {
@@ -123,14 +123,17 @@ export function Home() {
       const data: ProductDTO[] = response.data
       setItems(data)
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const isAppError = error instanceof AppError
+      const isAppError = error instanceof AppError
 
-        const title = isAppError
-          ? error.message
-          : 'Não foi possível encontrar nenhum anúncio disponível. Serviço indisponível no momento.'
-        alert(title)
-      }
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível encontrar nenhum anúncio disponível. Serviço indisponível no momento.'
+      Toast.show({
+        text1: 'Anúncios',
+        text2: title,
+        type: 'error',
+        position: 'top',
+      })
     }
   }
 
@@ -150,7 +153,12 @@ export function Home() {
       const title = isAppError
         ? error.message
         : 'Não foi possível encontrar nenhum anúncio disponível. Serviço indisponível no momento.'
-      alert(title)
+      Toast.show({
+        text1: 'Anúncios',
+        text2: title,
+        type: 'error',
+        position: 'top',
+      })
     }
   }
 
