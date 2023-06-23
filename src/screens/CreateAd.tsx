@@ -184,7 +184,6 @@ export function CreateAd() {
       payment_methods: paymentMethods,
     }
 
-    console.log(adPreview)
     navigate('adPreview', adPreview)
   }
 
