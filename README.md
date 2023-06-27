@@ -31,3 +31,14 @@ Uma aplicação de anúncios de produtos estilo OLX.
 - Zod;
 
 ## :camera: Screenshots
+
+<div align="center">
+  <h1>Aplicação Marketspace</h1>
+  <video src="https://github.com/Iann-rst/marketspace/assets/48128325/af5e7027-c89d-4026-94ac-9331fda81613" type="video/mp4"/>
+</div>
+
+
+
+
+
+
