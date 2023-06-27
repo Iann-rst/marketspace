@@ -199,6 +199,8 @@ export function Home() {
               openModal={() => setModalIsVisible(true)}
               value={value}
               onChangeText={onChange}
+              returnKeyType="send"
+              onSubmitEditing={handleSubmit(handleApplyFilters)}
             />
           )}
         />
